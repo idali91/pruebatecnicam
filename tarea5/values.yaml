@@ -1,0 +1,9 @@
+controller:
+  adminUser: "admin"
+  adminPassword: "4dm1n"
+  ingress:
+    enabled: true
+    hostName: jenkins.app.192.168.49.2.nip.io
+  jenkinsUrl: http://jenkins.app.192.168.49.2.nip.io
+  additionalPlugins:
+    - blueocean 

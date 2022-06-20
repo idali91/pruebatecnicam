@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tarea4
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: apache
+  name: apache
+  namespace: tarea4
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apache
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: apache
+    spec:
+      containers:
+      - image: docker.io/library/httpd:2.4
+        name: apache
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: apache
+  name: apache
+  namespace: tarea4
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: apache
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-apache
+  namespace: tarea4
+spec:
+  rules:
+  - host: "apache-tarea4.app.192.168.49.2.nip.io"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: apache
+            port:
+              number: 80

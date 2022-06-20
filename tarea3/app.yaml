@@ -1,0 +1,63 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tarea3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: app-tarea3
+  name: app-tarea3
+  namespace: tarea3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app-tarea3
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: app-tarea3
+    spec:
+      containers:
+      - image: quay.io/ileonc/holamundotarea1:latest
+        name: app-tarea3
+        resources: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: app-tarea3
+  name: app-tarea3
+  namespace: tarea3
+spec:
+  ports:
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: app-tarea3
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-app-tarea3
+  namespace: tarea3
+spec:
+  rules:
+  - host: "app-tarea3.app.192.168.49.2.nip.io"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: app-tarea3
+            port:
+              number: 80
